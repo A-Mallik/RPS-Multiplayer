@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- Bootstrap -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <!-- <link rel="stylesheet" href="assets/css/style.css"> -->
 
       <!-- ================================================================ -->
         <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
       <script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
-      <script src="assets/javascript/game.js"></script>
     <!-- ================================================================ -->
     <style>
       html,body{
@@ -29,13 +29,14 @@
       }
 
       #playerOne{
-        float:left;
+
         background-color:#1f3053;
         color:white;
         border-right: 1px solid white;
+        width: 800px;
       }
       #playerTwo{
-          float:left;
+
           background-color:#1f3053;
           color:white;
           height: 500px;
@@ -48,11 +49,20 @@
       }
 
       .enterGameButton{
-           height: 120px;
+           height: 40px;
            width: 200px;
             position:relative;
             margin-top: 150px;
 
+      }
+
+
+      #annoyingPlayButtonsThatDontBehave{
+        float:left;
+        display:inline-block;
+        padding: 10px;
+        height:50px;
+        width:100%;
       }
 
 
@@ -67,16 +77,30 @@
         <div class="container">
           <h1 class="display-4">Rock Paper Scissors</h1>
           <p class="lead">This is a modified version of the Rock,Paper,Scissors Game to include Firebase!</p>
+
         </div>
   </div>
+  <div id="annoyingPlayButtonsThatDontBehave"
+     <div class="enterBoxP1" >
+     <input id="playerOneInput" placeholder="Player One Name"/>
+     <button class="btn-primary enterGameButton" id="pOneButton">Click to Join</button>
+
+     </div>
+
+     <div class="enterBoxP2" >
+     <input id="playerTwoInput" placeholder="Player Two Name"/>
+     <button class="btn-primary enterGameButton" id="pTwoButton">Click to Join</button>
+     </div>
+
+   </div>
   <!-- ============   Player Boxes   ==================== -->
-  <div class="row">
+
+  <div class="row" >
 
     <div class="col-6 " id="playerOne">
       <h1 class="display-4">Player One</h1>
           <div class="playerBox">
 
-            <button class="btn-primary enterGameButton" id="pOneButton">Click to Join</button>
           </div>
     </div>
   <!-- ============Player Boxes==================== -->
@@ -84,7 +108,6 @@
       <h1 class="display-4">Player Two</h1>
           <div class="playerBox">
 
-              <button class="btn-primary enterGameButton" id="pTwoButton">Click to Join</button>
           </div>
     </div>
 
@@ -92,6 +115,9 @@
   </div>
 
 
+  <!-- ============Firebase Authentication==================== -->
+
+  <script src="assets/javascript/game.js"></script>
 
     </body>
 
