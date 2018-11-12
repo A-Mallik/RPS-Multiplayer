@@ -1,4 +1,6 @@
 // Initialize Firebase
+
+//Just to note: For some reason, if player two enters first, the other elements disappear and I cant seem to figure out why 
 var config = {
   apiKey: "AIzaSyAq-2e_HExZ9tmixdKwAjK2AD4l-H98T-o",
   authDomain: "rock-paper-scissors-6da24.firebaseapp.com",
@@ -13,73 +15,75 @@ var database = firebase.database();
 
 
 
-    $("#pOneButton").on("click",function(event){
-      $(".enterBoxP1").hide();
-            var ref = firebase.database().ref();
-            ref.update({PlayerOneStatus:{
-            onlineState: true,
-           status: "I'm online.",
-      }});
+$("#pOneButton").on("click",function(event){
+                $(".enterBoxP1").hide();
+                      var ref = firebase.database().ref();
+                      ref.update({PlayerOneStatus:{
+                      onlineState: true,
+                     status: "I'm online.",
+                }});
 
 
-    event.preventDefault();
+              event.preventDefault();
 
-   console.log("hello");
+             console.log("hello");
 
-   database.ref().update({
-  //
-    PlayerOne: {
-    Name: $("#playerOneInput").val(),
-    Wins: 0,
-    Losses : 0,
-    Draws : 0,
-   pOnechoice: "None"}
+             database.ref().update({
+            //
+              PlayerOne: {
+              Name: $("#playerOneInput").val(),
+              Wins: 0,
+              Losses : 0,
+              Draws : 0,
+             pOnechoice: "None"}
 
-   });
+             });
 
-   database.ref().on("value", function(snapshot) { // shows latest child added in the console
-       // storing the snapshot.val() in a variable for convenience
-       var snap = snapshot.val();
-      console.log(snap.PlayerOne.pOnechoice);
-       $("#playerOne").empty();
-       $("#playerOne").empty();
-       $("#playerOne").html('Name: ' + snap.PlayerOne.Name + '<br />' +
-                            'Wins: ' + snap.PlayerOne.Wins + '<br />' +
-                            'Losses: ' + snap.PlayerOne.Losses + '<br />' +
-                             'Draws: ' + snap.PlayerOne.Draws + '<br />'+
-                           'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />'
-           );
+             database.ref().on("value", function(snapshot) { // shows latest child added in the console
+                 // storing the snapshot.val() in a variable for convenience
+                 var snap = snapshot.val();
+                console.log(snap.PlayerOne.pOnechoice);
+                // $("#playerOne").empty();
+                 $("#playerOne").empty();
+                 $("#playerOne").html('Name: ' + snap.PlayerOne.Name + '<br />' +
+                                      'Wins: ' + snap.PlayerOne.Wins + '<br />' +
+                                      'Losses: ' + snap.PlayerOne.Losses + '<br />' +
+                                       'Draws: ' + snap.PlayerOne.Draws + '<br />'+
+                                     'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />'
+                     );
 
-           $("#playerOne").append(
+                     $("#playerOne").append(
 
-                   "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
-                   "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
-                   "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
-                   "<button value='submit' class = 'pOneBtns'>Submit</button>" +
-                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
-               );
-       // Handle the errors
-     }, function(errorObject) {
-       // console.log("Errors handled: " + errorObject.code);
-     });
-      var ref = firebase.database().ref();
-      ref.onDisconnect().update({PlayerOneStatus:{
-        onlineState: false,
-          status: "I'm offline.",
+                             "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
+                             "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
+                             "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
+                             "<button value='submit' class = 'pOneBtns'>Submit</button>" +
+                             "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
+                         );
+                 // Handle the errors
+               }, function(errorObject) {
+                 // console.log("Errors handled: " + errorObject.code);
+               });
+                var ref = firebase.database().ref();
+                ref.onDisconnect().update({PlayerOneStatus:{
+                  onlineState: false,
+                    status: "I'm offline.",
 
-         },
-         PlayerOne: {
-         Name: "",
-         Wins: 0,
-         Losses : 0,
-         Draws : 0,
-         pOnechoice: "None"}
-       });
+                   },
+                   PlayerOne: {
+                   Name: "",
+                   Wins: 0,
+                   Losses : 0,
+                   Draws : 0,
+                   pOnechoice: "None"}
+                 });
 });
 
+// =======================================================================================================
 
-    $("#pTwoButton").on("click",function(event){
+$("#pTwoButton").on("click",function(event){
       $(".enterBoxP2").hide();
+      $("#playerOne").hide();
       var ref = firebase.database().ref();
       ref.update({PlayerTwoStatus:{
          onlineState: true,
@@ -105,62 +109,44 @@ var database = firebase.database();
 
    // ====================
    database.ref().on("value", function(snapshot) { // shows latest child added in the console
-       // storing the snapshot.val() in a variable for convenience
-       var snap = snapshot.val();
-        console.log(snap.PlayerTwo.Wins);
-       $("#playerTwo").empty();
-       $("#playerTwo").html('Name: ' + snap.PlayerTwo.Name + '<br />' +
-                            'Wins: ' + snap.PlayerTwo.Wins + '<br />' +
-                            'Losses: ' + snap.PlayerTwo.Losses + '<br />' +
-                             'Draws: ' + snap.PlayerTwo.Draws + '<br />'+
-                           'Player Two Choice: ' + snap.PlayerTwo.pTwochoice + '<br />'
-           );
+           // storing the snapshot.val() in a variable for convenience
+           var snap = snapshot.val();
+            console.log(snap.PlayerTwo.Wins);
+          // $("#playerTwo").empty();
+           $("#playerTwo").html('Name: ' + snap.PlayerTwo.Name + '<br />' +
+                                'Wins: ' + snap.PlayerTwo.Wins + '<br />' +
+                                'Losses: ' + snap.PlayerTwo.Losses + '<br />' +
+                                 'Draws: ' + snap.PlayerTwo.Draws + '<br />'+
+                               'Player Two Choice: ' + snap.PlayerTwo.pTwochoice + '<br />'
+              +
 
+                       "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
+                       "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
+                       "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
+                       "<button value='submit' class = 'pTwoBtns'>Submit</button>" +
+                       "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
+                   );
 
-           $("#playerTwo").append(
+     //       // Handle the errors
+         }, function(errorObject) {
+           // console.log("Errors handled: " + errorObject.code);
+         });
 
-                   "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
-                   "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
-                   "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
-                   "<button value='submit' class = 'pTwoBtns'>Submit</button>" +
-                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
-               );
-       // ====================
-       // On Disconect
-       // ref.onDisconnect().update({
-       //   onlineState: false,
-       //   status: "I'm offline.",
-       //
-       //
-       // });
-       // ====================
-       // ====================
-       // ====================
+                 // ====================
+                 var ref = firebase.database().ref();
+                 ref.onDisconnect().update({
+                   PlayerTwoStatus:{
+                   onlineState: false,
+                     status: "I'm offline.",
 
-
- //
-
- //
- //       // Handle the errors
-     }, function(errorObject) {
-       // console.log("Errors handled: " + errorObject.code);
-     });
-
-             // ====================
-             var ref = firebase.database().ref();
-             ref.onDisconnect().update({
-               PlayerTwoStatus:{
-               onlineState: false,
-                 status: "I'm offline.",
-
-            },
-            PlayerTwo: {
-            Name: "",
-            Wins: 0,
-            Losses : 0,
-            Draws : 0,
-            pTwoChoice: "None" }
-          });
+                },
+                PlayerTwo: {
+                Name: "",
+                Wins: 0,
+                Losses : 0,
+                Draws : 0,
+                pTwoChoice: "None" }
+              });
 
 
 });
