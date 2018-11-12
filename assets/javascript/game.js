@@ -94,7 +94,8 @@ var database = firebase.database();
                    "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
                    "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
                    "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
-                   "<button value='submit' class = 'pOneBtns'>Submit</button>"
+                   "<button value='submit' class = 'pOneBtns'>Submit</button>" +
+                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
                );
 
 
@@ -166,7 +167,8 @@ var database = firebase.database();
                    "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
                    "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
                    "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
-                   "<button value='submit' class = 'pTwoBtns'>Submit</button>"
+                   "<button value='submit' class = 'pTwoBtns'>Submit</button>" +
+                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
                );
        // ====================
        // On Disconect
@@ -211,14 +213,18 @@ var database = firebase.database();
 //
 //     // Firebase watcher .on("child_added"
 
-// =====================Snapshot After Buttons=====================
+// =====================Snapshot After Buttons=====================\
+var pOneWins = 0;
+var pTwoWins = 0;
 
-database.ref().on("value", function(snapshot) { // shows latest child added in the console
+database.ref().on("child_removed", function(snapshot) { // shows latest child added in the console
    // storing the snapshot.val() in a variable for convenience
    var snap = snapshot.val();
    console.log(snap.PlayerOne.pOneChoice);
    $("#playerOne").empty();
    $("#playerTwo").empty();
+   $("#playerTwoInput").empty();
+   $("#playerOneInput").empty();
    $("#playerOne").html('Name: ' + snap.PlayerOne.Name + '<br />' +
                         'Wins: ' + snap.PlayerOne.Wins + '<br />' +
                         'Losses: ' + snap.PlayerOne.Losses + '<br />' +
@@ -230,7 +236,8 @@ database.ref().on("value", function(snapshot) { // shows latest child added in t
                "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
                "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
                "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
-               "<button value='submit' class = 'pOneBtns'>Submit</button>"
+               "<button value='submit' class = 'pOneBtns'>Submit</button>" +
+               "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
            );
  }, function(errorObject) {
  });
@@ -251,7 +258,8 @@ database.ref().on("value", function(snapshot) { // shows latest child added in t
                    "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
                    "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
                    "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
-                   "<button value='submit' class = 'pTwoBtns'>Submit</button>"
+                   "<button value='submit' class = 'pTwoBtns'>Submit</button>" +
+                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
                );
 
      }, function(errorObject) {
@@ -268,9 +276,7 @@ $(document).on("click", ".pOneBtns", function() {
 
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
-
           $(".pOneBtns").remove();
-
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
@@ -283,26 +289,19 @@ $(document).on("click", ".pOneBtns", function() {
       });
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
-
           $(".pOneBtns").remove();
-
         }, function(errorObject) {
-          // console.log("Errors handled: " + errorObject.code);
         });
     }
 
     if($(this).val() === "Scissors"){
       database.ref("PlayerOne").update({
      pOnechoice: "Scissors"
-
       });
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
-
           $(".pOneBtns").remove();
-
         }, function(errorObject) {
-          // console.log("Errors handled: " + errorObject.code);
         });
     }
 });
@@ -357,3 +356,106 @@ $(document).on("click", ".pTwoBtns", function() {
     }
 });
 // =======================RPS Game Logic========================
+database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
+    var snap = snapshot.val();
+
+    if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Scissors")) {
+
+      console.log("Player One Wins!");
+      pOneWins = pOneWins + 1;
+      database.ref("PlayerOne").update({
+        pOnechoice: "none",
+
+        Wins: pOneWins,
+      });
+      database.ref("PlayerTwo").update({
+        pTwochoice: "none",
+
+        Wins: pTwoWins,
+      });
+
+      console.log("Player One Wins" + snap.PlayerOne.Wins);
+    }
+      //wins++;
+     else if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Paper")) {
+
+       console.log("Player Two Wins!");
+       pTwoWins = pTwoWins + 1;
+       database.ref("PlayerTwo").update({
+         pTwochoice: "none",
+
+         Wins: pTwoWins,
+       });
+       database.ref("PlayerOne").update({
+         pOnechoice: "none",
+
+
+       });
+
+       console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+    //   losses++;
+     }
+    //else if ((userGuess === "s") && (computerGuess === "r")) {
+    //   losses++;
+    // } else if ((userGuess === "s") && (computerGuess === "p")) {
+    //   wins++;
+    // } else if ((userGuess === "p") && (computerGuess === "r")) {
+    //   wins++;
+    // } else if ((userGuess === "p") && (computerGuess === "s")) {
+    //   losses++;
+    // } else if (userGuess === computerGuess) {
+    //   ties++;
+    // }
+
+
+  }, function(errorObject) {
+    // console.log("Errors handled: " + errorObject.code);
+  });
+
+  // ==================Play Again Logic===============================
+  $(document).on("click", ".playAgain", function() {
+
+    database.ref().on("value", function(snapshot) { // shows latest child added in the console
+       // storing the snapshot.val() in a variable for convenience
+       var snap = snapshot.val();
+       console.log(snap.PlayerOne.pOneChoice);
+       $("#playerOne").empty();
+       $("#playerTwo").empty();
+       $("#playerTwoInput").empty();
+       $("#playerOneInput").empty();
+       // ------------------------------ Recreate the buttons with updated values if Play Again is clicked
+       $("#playerOne").html('Name: ' + snap.PlayerOne.Name + '<br />' +
+                            'Wins: ' + snap.PlayerOne.Wins + '<br />' +
+                            'Losses: ' + snap.PlayerOne.Losses + '<br />' +
+                             'Draws: ' + snap.PlayerOne.Draws + '<br />'
+                             //+
+                           //'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />' // Hiding this will only show the selected choice to current player
+           );
+           $("#playerOne").append(
+                   "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
+                   "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
+                   "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
+                   "<button value='submit' class = 'pOneBtns'>Submit</button>" +
+                   "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
+               );
+      //-------------------------------===========================
+      $("#playerTwo").html('Name: ' + snap.PlayerTwo.Name + '<br />' +
+                           'Wins: ' + snap.PlayerTwo.Wins + '<br />' +
+                           'Losses: ' + snap.PlayerTwo.Losses + '<br />' +
+                            'Draws: ' + snap.PlayerTwo.Draws + '<br />'
+                            //+
+                          //'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />' // Hiding this will only show the selected choice to current player
+          );
+          $("#playerTwo").append(
+                  "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
+                  "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
+                  "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
+                  "<button value='submit' class = 'pTwoBtns'>Submit</button>" +
+                  "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
+              );
+      //-------------------------------
+     }, function(errorObject) {
+     });
+
+
+});
