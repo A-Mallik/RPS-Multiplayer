@@ -12,55 +12,17 @@ firebase.initializeApp(config);
 var database = firebase.database();
 
 
-// // ==On Load==  I can't use this or it will reload every time someone enters or reloads the page
-// database.ref().update({
-// //
-//  PlayerTwo: {
-//  Name: "None",
-//  Wins: 0,
-//  Losses : 0,
-//  Draws : 0,
-//  pTwoChoice: "None" }
-//
-// ,
-//
-//
-// PlayerOne: {
-// Name: "None",
-// Wins: 0,
-// Losses : 0,
-// Draws : 0,
-// pOneChoice: "None" }
-//
-// });
-// // ==On Load==
-
-
-       // var ref = firebase.database().ref();
-       // ref.update({
-       //    onlineState: true,
-       //    status: "I'm online.",
-       //
-       // });
-       //
-       // ref.onDisconnect().update({
-       //   onlineState: false,
-       //   status: "I'm offline.",
-       //
-       //
-       // });
 
     $("#pOneButton").on("click",function(event){
       $(".enterBoxP1").hide();
-      var ref = firebase.database().ref();
-      ref.update({PlayerOneStatus:{
-         onlineState: true,
+            var ref = firebase.database().ref();
+            ref.update({PlayerOneStatus:{
+            onlineState: true,
            status: "I'm online.",
-
       }});
 
 
-      event.preventDefault();
+    event.preventDefault();
 
    console.log("hello");
 
@@ -88,7 +50,6 @@ var database = firebase.database();
                            'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />'
            );
 
-
            $("#playerOne").append(
 
                    "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
@@ -97,13 +58,7 @@ var database = firebase.database();
                    "<button value='submit' class = 'pOneBtns'>Submit</button>" +
                    "<button value='playAgain' class = 'playAgain'>Play Again?</button>"
                );
-
-
-
- //
-
- //
- //       // Handle the errors
+       // Handle the errors
      }, function(errorObject) {
        // console.log("Errors handled: " + errorObject.code);
      });
@@ -216,6 +171,7 @@ var database = firebase.database();
 // =====================Snapshot After Buttons=====================\
 var pOneWins = 0;
 var pTwoWins = 0;
+var Draws = 0;
 
 database.ref().on("child_removed", function(snapshot) { // shows latest child added in the console
    // storing the snapshot.val() in a variable for convenience
@@ -276,12 +232,12 @@ $(document).on("click", ".pOneBtns", function() {
 
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
-          $(".pOneBtns").remove();
+          $(".pOneBtns").remove();  //remove buttons to hide other choices
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
     }
-
+   // ------------------------------------------------
     if($(this).val() === "Paper"){
       database.ref("PlayerOne").update({
         pOnechoice: "Paper"
@@ -293,7 +249,7 @@ $(document).on("click", ".pOneBtns", function() {
         }, function(errorObject) {
         });
     }
-
+   // ------------------------------------------------
     if($(this).val() === "Scissors"){
       database.ref("PlayerOne").update({
      pOnechoice: "Scissors"
@@ -318,13 +274,13 @@ $(document).on("click", ".pTwoBtns", function() {
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
 
-          $(".pOneBtns").remove();
+          $(".pTwoBtns").remove();
 
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
     }
-
+   // ------------------------------------------------
     if($(this).val() === "Paper"){
       database.ref("PlayerTwo").update({
         pTwochoice: "Paper"
@@ -333,13 +289,13 @@ $(document).on("click", ".pTwoBtns", function() {
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
 
-          $(".pOneBtns").remove();
+          $(".pTwoBtns").remove();
 
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
     }
-
+     // ------------------------------------------------
     if($(this).val() === "Scissors"){
       database.ref("PlayerTwo").update({
      pTwochoice: "Scissors"
@@ -348,7 +304,7 @@ $(document).on("click", ".pTwoBtns", function() {
       database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
           var snap = snapshot.val();
 
-          $(".pOneBtns").remove();
+          $(".pTwoBtns").remove();
 
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
@@ -358,7 +314,7 @@ $(document).on("click", ".pTwoBtns", function() {
 // =======================RPS Game Logic========================
 database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
     var snap = snapshot.val();
-
+    // ---------------------------------------------------------------------------------------------------------
     if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Scissors")) {
 
       console.log("Player One Wins!");
@@ -376,8 +332,8 @@ database.ref().on("value", function(snapshot) { // Remove the other buttons once
 
       console.log("Player One Wins" + snap.PlayerOne.Wins);
     }
-      //wins++;
-     else if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Paper")) {
+      // ---------------------------------------------------------------------------------------------------------
+      if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Paper")) {
 
        console.log("Player Two Wins!");
        pTwoWins = pTwoWins + 1;
@@ -395,14 +351,103 @@ database.ref().on("value", function(snapshot) { // Remove the other buttons once
        console.log("Player Two Wins" + snap.PlayerTwo.Wins);
     //   losses++;
      }
-    //else if ((userGuess === "s") && (computerGuess === "r")) {
-    //   losses++;
-    // } else if ((userGuess === "s") && (computerGuess === "p")) {
-    //   wins++;
-    // } else if ((userGuess === "p") && (computerGuess === "r")) {
-    //   wins++;
-    // } else if ((userGuess === "p") && (computerGuess === "s")) {
-    //   losses++;
+    // ---------------------------------------------------------------------------------------------------------
+     if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Rock")) {
+
+      console.log("Player Two Wins!");
+      pTwoWins = pTwoWins + 1;
+      database.ref("PlayerTwo").update({
+        pTwochoice: "none",
+
+        Wins: pTwoWins,
+      });
+      database.ref("PlayerOne").update({
+        pOnechoice: "none",
+
+
+      });
+
+      console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+   //   losses++;
+    }
+   //  // ---------------------------------------------------------------------------------------------------------
+     if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Paper")) {
+
+      console.log("Player Two Wins!");
+      pOneWins = pOneWins + 1;
+      database.ref("PlayerOne").update({
+        pOnechoice: "none",
+
+        Wins: pOneWins,
+      });
+      database.ref("PlayerOne").update({
+        pTwochoice: "none",
+
+
+      });
+
+      console.log("Player One Wins " + snap.PlayerOne.Wins);
+   //   losses++;
+    }
+   //  // ---------------------------------------------------------------------------------------------------------
+     if ((snap.PlayerOne.pOnechoice === "Paper") && (snap.PlayerTwo.pTwochoice === "Rock")) {
+
+      console.log("Player Two Wins!");
+      pOneWins = pOneWins + 1;
+      database.ref("PlayerOne").update({
+        pOnechoice: "none",
+
+        Wins: pOneWins,
+      });
+      database.ref("PlayerOne").update({
+        pTwochoice: "none",
+
+
+      });
+
+      console.log("Player One Wins " + snap.PlayerOne.Wins);
+   //   losses++;
+    }
+   //  // ---------------------------------------------------------------------------------------------------------
+     if ((snap.PlayerOne.pOnechoice === "Paper") && (snap.PlayerTwo.pTwochoice === "Scissors")) {
+
+      console.log("Player Two Wins!");
+      pTwoWins = pTwoWins + 1;
+      database.ref("PlayerTwo").update({
+        pTwochoice: "none",
+
+        Wins: pTwoWins,
+      });
+      database.ref("PlayerOne").update({
+        pOnechoice: "none",
+
+
+      });
+
+      console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+   //   losses++;
+    }
+   //  // ---------------------------------------------------------------------------------------------------------
+     if ((snap.PlayerOne.pOnechoice === "Rock" && snap.PlayerTwo.pTwochoice  === "Rock" ) || (snap.PlayerOne.pOnechoice === "Paper" && snap.PlayerTwo.pTwochoice  === "Paper" ) || (snap.PlayerOne.pOnechoice === "Scissors" && snap.PlayerTwo.pTwochoice  === "Scissors" )) {
+
+      console.log("Player Two Wins!");
+      Draws = Draws + 1;
+      database.ref("PlayerTwo").update({
+        pTwochoice: "Draw",   //different names of 'draw' on purpose otherwise run into issue, bandaid fix to problem
+        Draws: Draws,
+        Wins: pTwoWins,
+      });
+      database.ref("PlayerOne").update({
+        pOnechoice: "Drew",
+        Draws: Draws,
+        Wins: pOneWins,
+      });
+
+      console.log("Draw");
+   //   losses++;
+    }
+    // ---------------------------------------------------------------------------------------------------------
+
     // } else if (userGuess === computerGuess) {
     //   ties++;
     // }
@@ -459,3 +504,25 @@ database.ref().on("value", function(snapshot) { // Remove the other buttons once
 
 
 });
+
+// ==================On Disconnect to Reset View =====================
+
+  // <div class="row" >
+  //
+  //   <div class="col-6 " id="playerOne">
+  //     <h1 class="display-4">Player One</h1>
+  //         <div class="playerBox">
+  //
+  //         </div>
+  //   </div>
+  // <!-- ============Player Boxes==================== -->
+  //   <div class="col-6 " id="playerTwo">
+  //     <h1 class="display-4">Player Two</h1>
+  //         <div class="playerBox">
+  //
+  //         </div>
+  //   </div>
+  //
+  //
+  // </div>
+//=====================================================================
