@@ -1,6 +1,6 @@
 // Initialize Firebase
 
-//Just to note: For some reason, if player two enters first, the other elements disappear and I cant seem to figure out why 
+//Just to note: For some reason, if player two enters first, the other elements disappear and I cant seem to figure out why
 var config = {
   apiKey: "AIzaSyAq-2e_HExZ9tmixdKwAjK2AD4l-H98T-o",
   authDomain: "rock-paper-scissors-6da24.firebaseapp.com",
@@ -18,7 +18,7 @@ var database = firebase.database();
 $("#pOneButton").on("click",function(event){
                 $(".enterBoxP1").hide();
                       var ref = firebase.database().ref();
-                      ref.update({PlayerOneStatus:{
+                      ref.update({PlayerOneStatus:{   //online status of Player
                       onlineState: true,
                      status: "I'm online.",
                 }});
@@ -28,7 +28,7 @@ $("#pOneButton").on("click",function(event){
 
              console.log("hello");
 
-             database.ref().update({
+             database.ref().update({                //In general on refresh, reset stats
             //
               PlayerOne: {
               Name: $("#playerOneInput").val(),
@@ -65,7 +65,7 @@ $("#pOneButton").on("click",function(event){
                  // console.log("Errors handled: " + errorObject.code);
                });
                 var ref = firebase.database().ref();
-                ref.onDisconnect().update({PlayerOneStatus:{
+                ref.onDisconnect().update({PlayerOneStatus:{   //closing browser or refreshing will set status to offline and reset stats as well.
                   onlineState: false,
                     status: "I'm offline.",
 
@@ -81,16 +81,15 @@ $("#pOneButton").on("click",function(event){
 
 // =======================================================================================================
 
-$("#pTwoButton").on("click",function(event){
+$("#pTwoButton").on("click",function(event){       //generally same logic for player two button
       $(".enterBoxP2").hide();
-      $("#playerOne").hide();
+      //$("#playerOne").hide();
       var ref = firebase.database().ref();
-      ref.update({PlayerTwoStatus:{
+      ref.update({PlayerTwoStatus:{       //online status of Player
          onlineState: true,
            status: "I'm online.",
 
       }});
-
 
       event.preventDefault();
 
@@ -119,7 +118,6 @@ $("#pTwoButton").on("click",function(event){
                                  'Draws: ' + snap.PlayerTwo.Draws + '<br />'+
                                'Player Two Choice: ' + snap.PlayerTwo.pTwochoice + '<br />'
               +
-
                        "<button value='Rock' class = 'pTwoBtns'>Rock</button>" + "<br />" +
                        "<button value='Paper' class = 'pTwoBtns'>Paper</button>" + "<br />" +
                        "<button value='Scissors' class = 'pTwoBtns'>Scissors</button>" + "<br />" +
@@ -138,7 +136,6 @@ $("#pTwoButton").on("click",function(event){
                    PlayerTwoStatus:{
                    onlineState: false,
                      status: "I'm offline.",
-
                 },
                 PlayerTwo: {
                 Name: "",
@@ -147,13 +144,7 @@ $("#pTwoButton").on("click",function(event){
                 Draws : 0,
                 pTwoChoice: "None" }
               });
-
-
 });
-
-//
-//     // Firebase watcher .on("child_added"
-
 // =====================Snapshot After Buttons=====================\
 var pOneWins = 0;
 var pTwoWins = 0;
@@ -170,11 +161,10 @@ database.ref().on("child_removed", function(snapshot) { // shows latest child ad
    $("#playerOne").html('Name: ' + snap.PlayerOne.Name + '<br />' +
                         'Wins: ' + snap.PlayerOne.Wins + '<br />' +
                         'Losses: ' + snap.PlayerOne.Losses + '<br />' +
-                         'Draws: ' + snap.PlayerOne.Draws + '<br />'
+                         'Draws: ' + snap.PlayerOne.Draws + '<br />'   +
                          //+
                        //'Player One Choice: ' + snap.PlayerOne.pOnechoice + '<br />' // Hiding this will only show the selected choice to current player
-       );
-       $("#playerOne").append(
+
                "<button value='Rock' class = 'pOneBtns'>Rock</button>" + "<br />" +
                "<button value='Paper' class = 'pOneBtns'>Paper</button>" + "<br />" +
                "<button value='Scissors' class = 'pOneBtns'>Scissors</button>" + "<br />" +
@@ -298,21 +288,19 @@ $(document).on("click", ".pTwoBtns", function() {
     }
 });
 // =======================RPS Game Logic========================
-database.ref().on("value", function(snapshot) { // Remove the other buttons once a choice has been made
+database.ref().on("value", function(snapshot) {
     var snap = snapshot.val();
     // ---------------------------------------------------------------------------------------------------------
     if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Scissors")) {
 
       console.log("Player One Wins!");
       pOneWins = pOneWins + 1;
-      database.ref("PlayerOne").update({
+      database.ref("PlayerOne").update({          //upon choices selected, reset choices back to none so that logic can continue
         pOnechoice: "none",
-
-        Wins: pOneWins,
+        Wins: pOneWins,                           //updates wins for player one
       });
       database.ref("PlayerTwo").update({
         pTwochoice: "none",
-
         Wins: pTwoWins,
       });
 
@@ -335,26 +323,21 @@ database.ref().on("value", function(snapshot) { // Remove the other buttons once
        });
 
        console.log("Player Two Wins" + snap.PlayerTwo.Wins);
-    //   losses++;
      }
     // ---------------------------------------------------------------------------------------------------------
      if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Rock")) {
-
-      console.log("Player Two Wins!");
-      pTwoWins = pTwoWins + 1;
-      database.ref("PlayerTwo").update({
-        pTwochoice: "none",
-
-        Wins: pTwoWins,
+          console.log("Player Two Wins!");
+          pTwoWins = pTwoWins + 1;
+          database.ref("PlayerTwo").update({
+            pTwochoice: "none",
+            Wins: pTwoWins,
       });
+
       database.ref("PlayerOne").update({
-        pOnechoice: "none",
-
-
+          pOnechoice: "none",
       });
 
       console.log("Player Two Wins" + snap.PlayerTwo.Wins);
-   //   losses++;
     }
    //  // ---------------------------------------------------------------------------------------------------------
      if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Paper")) {
@@ -434,17 +417,12 @@ database.ref().on("value", function(snapshot) { // Remove the other buttons once
     }
     // ---------------------------------------------------------------------------------------------------------
 
-    // } else if (userGuess === computerGuess) {
-    //   ties++;
-    // }
-
-
   }, function(errorObject) {
     // console.log("Errors handled: " + errorObject.code);
   });
 
   // ==================Play Again Logic===============================
-  $(document).on("click", ".playAgain", function() {
+$(document).on("click", ".playAgain", function() {
 
     database.ref().on("value", function(snapshot) { // shows latest child added in the console
        // storing the snapshot.val() in a variable for convenience
