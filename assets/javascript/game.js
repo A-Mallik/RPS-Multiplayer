@@ -12,11 +12,46 @@ var config = {
 firebase.initializeApp(config);
 
 var database = firebase.database();
+database.ref().update({                //In general on refresh, reset stats
+//
+ PlayerStatus1: {
+ Message: "Player One- Status: <strong style='color:red'>Not In</strong>",
+ GameMessage: "<br/><strong>Button NOT Chosen Yet</strong>"
+},
+ PlayerStatus2: {
 
+ Message: "Player Two- Status:<strong style='color:red'>Not In</strong>",
+ GameMessage: "<br/><strong>Button NOT Chosen Yet</strong>"
+},
+
+Playerbuttons:{
+
+}
+});
+
+database.ref().on("value", function(snapshot) { // shows latest child added in the console
+        // storing the snapshot.val() in a variable for convenience
+        var snap = snapshot.val();
+
+        $("#updates").html(snap.PlayerStatus1.Message + snap.PlayerStatus1.GameMessage  + "<br/>" +  snap.PlayerStatus2.Message + ": " + snap.PlayerStatus2.GameMessage
+                );
+
+  //       // Handle the errors
+
+      });
 
 
 $("#pOneButton").on("click",function(event){
-                $(".enterBoxP1").hide();
+  database.ref().update({                //In general on refresh, reset stats
+  //
+   PlayerStatus1: {
+     Message: " <strong style='color:Green'>Player One Has Entered</strong>",
+     GameMessage: "<br> <strong>Has Not Chosen Yet</strong></br>"
+ }
+  });
+
+  $("#pOneButton").css("visibility","hidden");
+  $("#playerOneInput").css("visibility","hidden");
                       var ref = firebase.database().ref();
                       ref.update({PlayerOneStatus:{   //online status of Player
                       onlineState: true,
@@ -82,7 +117,16 @@ $("#pOneButton").on("click",function(event){
 // =======================================================================================================
 
 $("#pTwoButton").on("click",function(event){       //generally same logic for player two button
-      $(".enterBoxP2").hide();
+  database.ref().update({                //In general on refresh, reset stats
+  //
+   PlayerStatus2: {
+     Message: " <strong style='color:Green'>Player Two Has Entered</strong>",
+     GameMessage: "<br> <strong>Has Not Chosen Yet</strong></br>"
+ }
+  });
+
+      $("#pTwoButton").css("visibility","hidden");
+      $("#playerTwoInput").css("visibility","hidden");
       //$("#playerOne").hide();
       var ref = firebase.database().ref();
       ref.update({PlayerTwoStatus:{       //online status of Player
@@ -212,6 +256,14 @@ $(document).on("click", ".pOneBtns", function() {
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus1: {
+            Message: " <strong style='color:Green'>Player One Has Chosen.</strong>",
+             GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
     }
    // ------------------------------------------------
     if($(this).val() === "Paper"){
@@ -224,6 +276,15 @@ $(document).on("click", ".pOneBtns", function() {
           $(".pOneBtns").remove();
         }, function(errorObject) {
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus1: {
+             Message: " <strong style='color:Green'>Player One Has Chosen.</strong>",
+              GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
+
     }
    // ------------------------------------------------
     if($(this).val() === "Scissors"){
@@ -235,7 +296,16 @@ $(document).on("click", ".pOneBtns", function() {
           $(".pOneBtns").remove();
         }, function(errorObject) {
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus1: {
+             Message: " <strong style='color:Green'>Player One Has Chosen.</strong>",
+              GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
     }
+
 });
 
 // ===============Button choices for Player Two=========
@@ -255,6 +325,14 @@ $(document).on("click", ".pTwoBtns", function() {
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus2: {
+             Message: " <strong style='color:Green'>Player Two Has Chosen.</strong>",
+              GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
     }
    // ------------------------------------------------
     if($(this).val() === "Paper"){
@@ -270,6 +348,14 @@ $(document).on("click", ".pTwoBtns", function() {
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus2: {
+             Message: " <strong style='color:Green'>Player Two Has Chosen.</strong>",
+              GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
     }
      // ------------------------------------------------
     if($(this).val() === "Scissors"){
@@ -285,6 +371,14 @@ $(document).on("click", ".pTwoBtns", function() {
         }, function(errorObject) {
           // console.log("Errors handled: " + errorObject.code);
         });
+        // -----
+          database.ref().update({
+          //
+           PlayerStatus2: {
+             Message: " <strong style='color:Green'>Player Two Has Chosen.</strong>",
+              GameMessage: "<br> <strong>Choice Hidden</strong></br>"
+         }
+          });
     }
 });
 // =======================RPS Game Logic========================
@@ -305,6 +399,14 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Player One Wins" + snap.PlayerOne.Wins);
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus1: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player One Wins!.</strong>",
+            GameMessage: "<br> <strong>Rock</strong></br>"
+       }
+        });
     }
       // ---------------------------------------------------------------------------------------------------------
       if ((snap.PlayerOne.pOnechoice === "Rock") && (snap.PlayerTwo.pTwochoice === "Paper")) {
@@ -323,6 +425,14 @@ database.ref().on("value", function(snapshot) {
        });
 
        console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+       // -----
+         database.ref().update({
+         //
+          PlayerStatus2: {
+            Message: " <strong style='color:Green, font-size: 25px;'>Player Two Wins!.</strong>",
+             GameMessage: "<br> <strong>Paper</strong></br>"
+        }
+         });
      }
     // ---------------------------------------------------------------------------------------------------------
      if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Rock")) {
@@ -338,6 +448,14 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus2: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player Two Wins!.</strong>",
+            GameMessage: "<br> <strong>Rock</strong></br>"
+       }
+        });
     }
    //  // ---------------------------------------------------------------------------------------------------------
      if ((snap.PlayerOne.pOnechoice === "Scissors") && (snap.PlayerTwo.pTwochoice === "Paper")) {
@@ -356,6 +474,15 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Player One Wins " + snap.PlayerOne.Wins);
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus1: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player One Wins!.</strong>",
+            GameMessage: "<br> <strong>Scissors</strong></br>"
+       }
+        });
+
    //   losses++;
     }
    //  // ---------------------------------------------------------------------------------------------------------
@@ -375,6 +502,14 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Player One Wins " + snap.PlayerOne.Wins);
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus1: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player One Wins!.</strong>",
+            GameMessage: "<br> <strong>Paper</strong></br>"
+       }
+        });
    //   losses++;
     }
    //  // ---------------------------------------------------------------------------------------------------------
@@ -394,6 +529,14 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Player Two Wins" + snap.PlayerTwo.Wins);
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus2: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player Two Wins!.</strong>",
+            GameMessage: "<br> <strong>Scissors</strong></br>"
+       }
+        });
    //   losses++;
     }
    //  // ---------------------------------------------------------------------------------------------------------
@@ -413,7 +556,18 @@ database.ref().on("value", function(snapshot) {
       });
 
       console.log("Draw");
-   //   losses++;
+      // -----
+        database.ref().update({
+        //
+         PlayerStatus1: {
+           Message: " <strong style='color:Green, font-size: 25px;'>Player One Draws!.</strong>",
+            GameMessage: "<br> <strong> </strong></br>"
+       },
+       PlayerStatus2: {
+         Message: " <strong style='color:Green, font-size: 25px;'>Player Two Draws!.</strong>",
+          GameMessage: "<br> <strong> </strong></br>"
+     }
+        });
     }
     // ---------------------------------------------------------------------------------------------------------
 
