@@ -1,6 +1,8 @@
 // Initialize Firebase
 
 //Just to note: For some reason, if player two enters first, the other elements disappear and I cant seem to figure out why
+//Console might show whats going on better,will try to clean console log up before grading.
+
 var config = {
   apiKey: "AIzaSyAq-2e_HExZ9tmixdKwAjK2AD4l-H98T-o",
   authDomain: "rock-paper-scissors-6da24.firebaseapp.com",
